@@ -1,52 +1,61 @@
+// const { ApolloServer } = require('apollo-server');
+// const mongoose = require('mongoose');
+
+// const typeDefs = require('./graphql/typeDefs');
+// const resolvers = require('./graphql/resolvers');
+// const { MONGODB } = require('./config.js');
+
+// const server = new ApolloServer({
+//     typeDefs,
+//     resolvers
+// });
+
+// // Bagian ini telah diperbaiki dengan menghapus objek konfigurasi yang usang
+// mongoose
+//     .connect(MONGODB)
+//     .then(() => {
+//         console.log('MongoDB Connected');
+//         return server.listen({ port: 5000 });
+//     })
+//     .then((res) => {
+//         console.log(`Server running at ${res.url}`);
+//     })
+//     .catch((err) => {
+//         console.error(err);
+//     });
+
+
+
 const { ApolloServer } = require('apollo-server');
-const gql = require('graphql-tag');
 const mongoose = require('mongoose');
 
-const Post = require('./models/Post');
-// Memanggil variabel MONGODB dari file config.js
+const typeDefs = require('./graphql/typeDefs');
+const resolvers = require('./graphql/resolvers');
 const { MONGODB } = require('./config.js');
-
-const typeDefs = gql`
-  type Post {
-    id: ID!
-    body: String!
-    createdAt: String!
-    username: String!
-  }
-
-  type Query {
-    getPosts: [Post]
-  }
-`;
-
-const resolvers = {
-    Query: {
-        async getPosts() {
-            try {
-                const posts = await Post.find();
-                return posts;
-            } catch (err) {
-                throw new Error(err);
-            }
-        }
-    }
-};
 
 const server = new ApolloServer({
     typeDefs,
     resolvers
 });
 
-// Menghubungkan ke MongoDB tanpa opsi yang sudah tidak didukung (deprecated)
+console.log('Starting server...');
+console.log('Connecting to MongoDB...');
+
 mongoose
-    .connect(MONGODB)
+    .connect(MONGODB, {
+        serverSelectionTimeoutMS: 30000,
+        socketTimeoutMS: 30000,
+        family: 4
+    })
     .then(() => {
-        console.log('MongoDB Connected successfully');
+        console.log('✅ MongoDB Connected Successfully!');
         return server.listen({ port: 5000 });
     })
     .then((res) => {
-        console.log(`Server running at ${res.url}`);
+        console.log(`🚀 Server running at ${res.url}`);
     })
     .catch((err) => {
-        console.error('Connection error:', err.message);
+        console.error('❌ Connection error:');
+        console.error('Error name:', err.name);
+        console.error('Error message:', err.message);
     });
