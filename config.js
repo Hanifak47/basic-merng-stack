@@ -1,7 +1,13 @@
+// module.exports = {
+//     MONGODB: 'mongodb+srv://hanif:hanif999@cluster0.owf6hnt.mongodb.net/merng?retryWrites=true&w=majority',
+//     SECRET_KEY: 'some very secret key'
+// }
+
 module.exports = {
-    MONGODB: 'mongodb+srv://hanif:hanif999@cluster0.owf6hnt.mongodb.net/merng?retryWrites=true&w=majority',
+    MONGODB: 'mongodb+srv://hanif:hanif999@cluster0.ozvm3x6.mongodb.net/merng?appName=Cluster0',
     SECRET_KEY: 'some very secret key'
 }
+
 
 
 // config.js
