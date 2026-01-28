@@ -3,42 +3,35 @@ import { Button, Form } from "semantic-ui-react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 
+import { useForm } from '../util/hooks';
+
 function Register(props) {
 
     // (1) menampung error
     const [errors, setErrors] = useState({});
 
-    // (2) menampung data ketikan user
-    const [values, setValues] = useState({
+    const { onChange, onSubmit, values } = useForm(registerUser, {
         username: '',
         email: '',
         password: '',
         confirmPassword: ''
     });
 
-    // (3) setiap kali value dari form berubah maka value akan diperbaruhi sesuai inputan user secara realtime, setiap ada perubahan data values (2) akan diperbaruhi
-    const onChange = (event) => {
-        setValues({ ...values, [event.target.name]: event.target.value });
-    }
-
     // (4) mendefinisikan sebuah method bernama adduser dimana variabel yg ditampung adalah data ketikan user, serta pendefinisian error, data values adalah diambil dari (2) jika submit
     const [addUser, { loading }] = useMutation(REGISTER_USER, {
         update(_, result) {
-            console.log(result)
             props.history.push('/');
         },
         onError(err) {
-            console.log(err.graphQLErrors[0].extensions.exception.errors);
             setErrors(err.graphQLErrors[0].extensions.exception.errors);
         },
         variables: values
     });
 
-    // (5) jika submit jalankan adduser
-    const onSubmit = (event) => {
-        event.preventDefault();
+    function registerUser() {
         addUser();
     }
+
     return (
         <div className="form-container">
             <Form onSubmit={onSubmit} noValidate className={loading ? "loading" : ''}>

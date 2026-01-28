@@ -3,46 +3,43 @@ import { Button, Form } from "semantic-ui-react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 
-function Register(props) {
+import { useForm } from "../util/hooks";
+
+
+function Login(props) {
 
     // (1) menampung error
     const [errors, setErrors] = useState({});
 
-    // (2) menampung data ketikan user
-    const [values, setValues] = useState({
+    // // (3) setiap kali value dari form berubah maka value akan diperbaruhi sesuai inputan user secara realtime, setiap ada perubahan data values (2) akan diperbaruhi
+    // const onChange = (event) => {
+    //     setValues({ ...values, [event.target.name]: event.target.value });
+    // }
+
+    const { onChange, onSubmit, values } = useForm(loginUserCallback, {
         username: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
+        password: ''
     });
 
-    // (3) setiap kali value dari form berubah maka value akan diperbaruhi sesuai inputan user secara realtime, setiap ada perubahan data values (2) akan diperbaruhi
-    const onChange = (event) => {
-        setValues({ ...values, [event.target.name]: event.target.value });
-    }
 
     // (4) mendefinisikan sebuah method bernama adduser dimana variabel yg ditampung adalah data ketikan user, serta pendefinisian error, data values adalah diambil dari (2) jika submit
-    const [addUser, { loading }] = useMutation(REGISTER_USER, {
+    const [loginUser, { loading }] = useMutation(LOGIN_USER, {
         update(_, result) {
-            console.log(result)
             props.history.push('/');
         },
         onError(err) {
-            console.log(err.graphQLErrors[0].extensions.exception.errors);
             setErrors(err.graphQLErrors[0].extensions.exception.errors);
         },
         variables: values
     });
 
-    // (5) jika submit jalankan adduser
-    const onSubmit = (event) => {
-        event.preventDefault();
-        addUser();
+    function loginUserCallback() {
+        loginUser();
     }
     return (
         <div className="form-container">
             <Form onSubmit={onSubmit} noValidate className={loading ? "loading" : ''}>
-                <h1>Register</h1>
+                <h1>Login</h1>
                 <Form.Input
                     label="Username"
                     placeholder="Username.."
@@ -54,15 +51,6 @@ function Register(props) {
                 />
 
                 <Form.Input
-                    label="Email"
-                    placeholder="Email.."
-                    name="email"
-                    type="email"
-                    value={values.email}
-                    error={errors.email ? true : false}
-                    onChange={onChange}
-                />
-                <Form.Input
                     label="Password"
                     placeholder="Password.."
                     name="password"
@@ -71,17 +59,8 @@ function Register(props) {
                     error={errors.password ? true : false}
                     onChange={onChange}
                 />
-                <Form.Input
-                    label="Confirm Password"
-                    placeholder="Confirm Password.."
-                    name="confirmPassword"
-                    type="password"
-                    value={values.confirmPassword}
-                    error={errors.confirmPassword ? true : false}
-                    onChange={onChange}
-                />
                 <Button type="submit" primary onSubmit={onSubmit}>
-                    Register
+                    Login
                 </Button>
 
             </Form>
@@ -103,21 +82,15 @@ function Register(props) {
     );
 }
 
-const REGISTER_USER = gql`
+const LOGIN_USER = gql`
 # lihat pada resolvers user
-  mutation register(
+  mutation login(
     $username: String!
-    $email: String!
     $password: String!
-    $confirmPassword: String!
   ) {
-    register(
-      registerInput: {
+    login(
         username: $username
-        email: $email
         password: $password
-        confirmPassword: $confirmPassword
-      }
     ) {
 #    returnnya
       id
@@ -129,4 +102,4 @@ const REGISTER_USER = gql`
   }
 `;
 
-export default Register;
+export default Login;
