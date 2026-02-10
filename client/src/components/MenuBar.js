@@ -1,13 +1,18 @@
 // lihat di dokumentasi semantic ui namun dengan beberpaa perubahan
 
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Menu } from 'semantic-ui-react'
 
 import { Link } from 'react-router-dom'
 
 
+
+import { AuthContext } from '../context/auth';
+
 // export default class MenuExampleSecondaryPointing extends Component{
 function MenuBar() {
+
+    const { user, logout } = useContext(AuthContext);
 
     const pathname = window.location.pathname;
 
@@ -17,7 +22,24 @@ function MenuBar() {
 
     const handleItemClick = (e, { name }) => setActiveItem(name);
 
-    return (
+    const menuBar = user ? (
+        <Menu pointing secondary size="massive" color='teal'>
+
+            <Menu.Item
+                name={user.username}
+                active
+                as={Link}
+                to="/"
+            />
+
+            <Menu.Menu position='right'>
+                <Menu.Item
+                    name='logout'
+                    onClick={logout}
+                />
+            </Menu.Menu>
+        </Menu>
+    ) : (
         <Menu pointing secondary size="massive" color='teal'>
 
             <Menu.Item
@@ -45,7 +67,9 @@ function MenuBar() {
                 />
             </Menu.Menu>
         </Menu>
-    )
+    );
+
+    return menuBar;
 
 }
 

@@ -1,30 +1,37 @@
-import React, { useState } from "react";
+
+import React, { useContext, useState } from "react";
 import { Button, Form } from "semantic-ui-react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
+
+
+import { AuthContext } from "../context/auth";
 
 import { useForm } from "../util/hooks";
 
 
 function Login(props) {
 
-    // (1) menampung error
+    
+    const context = useContext(AuthContext);
+
+    // use state default menampung objek kosong
     const [errors, setErrors] = useState({});
 
-    // // (3) setiap kali value dari form berubah maka value akan diperbaruhi sesuai inputan user secara realtime, setiap ada perubahan data values (2) akan diperbaruhi
-    // const onChange = (event) => {
-    //     setValues({ ...values, [event.target.name]: event.target.value });
-    // }
-
+    // menggunakan custom hook useform dengan parameter loginusercallbakc dan nilai awal username dan password yg mana mengembalikan onchange onsubmit dan values ketiganya diperoleh dari useform (return valuenya)
+    // login user sendiri dapat dari usemutation di bawah 
     const { onChange, onSubmit, values } = useForm(loginUserCallback, {
         username: '',
         password: ''
     });
 
 
-    // (4) mendefinisikan sebuah method bernama adduser dimana variabel yg ditampung adalah data ketikan user, serta pendefinisian error, data values adalah diambil dari (2) jika submit
     const [loginUser, { loading }] = useMutation(LOGIN_USER, {
-        update(_, result) {
+        update(_, { data: { login: userData } }) {
+            // sama dengan update: function() {}, diatas adalah shorthand
+
+            // mengugnakan scope fungsi pada context yaitu login
+            context.login(userData);
             props.history.push('/');
         },
         onError(err) {
