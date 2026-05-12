@@ -27,7 +27,14 @@ module.exports = {
     },
     Mutation: {
         async createPost(_, { body }, context) {
+
+            console.log('createPosts');
+
             const user = checkAuth(context);
+
+            if (body.trim() === '') {
+                throw new Error('Postingan wajib ada isinya');
+            }
 
             const newPost = new Post({
                 body,

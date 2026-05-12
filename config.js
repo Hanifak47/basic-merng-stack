@@ -10,6 +10,9 @@ module.exports = {
 
 
 
+// mongodb+srv://hanif:<db_password>@cluster0.ozvm3x6.mongodb.net/?appName=Cluster0
+
+
 // config.js
 // module.exports = {
 //     // Tambahkan 'merng' sebelum tanda tanya
