@@ -20,17 +20,36 @@ function PostForm() {
 
 
   // fungsi (b) eksekusi perintah graphql untuk membuat post
+  // const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
+  //   variables: values,
+  //   update(proxy, result) {
+  //     const data = proxy.readQuery({
+  //       // fetch berasal dari impmort fetch yang mana berada pada graphql utilitys lihat nomor 1
+  //       query: FETCH_POSTS_QUERY
+  //     })
+  //       // console.log('data dari cache:', data);
+  //     // getpost dari fetch pada file nomor 1
+  //     data.getPosts = [result.data.createPost, ...data.getPosts]
+  //     proxy.writeQuery({ query: FETCH_POSTS_QUERY, data })
+  //     values.body = '';
+  //   }
+  // });
+
+
   const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
     variables: values,
     update(proxy, result) {
       const data = proxy.readQuery({
-        // fetch berasal dari impmort fetch yang mana berada pada graphql utilitys lihat nomor 1
         query: FETCH_POSTS_QUERY
-      })
-        // console.log('data dari cache:', data);
-      // getpost dari fetch pada file nomor 1
-      data.getPosts = [result.data.createPost, ...data.getPosts]
-      proxy.writeQuery({ query: FETCH_POSTS_QUERY, data })
+      });
+
+      proxy.writeQuery({
+        query: FETCH_POSTS_QUERY,
+        data: {
+          getPosts: [result.data.createPost, ...data.getPosts]
+        }
+      });
+
       values.body = '';
     }
   });

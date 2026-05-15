@@ -26,6 +26,9 @@ function Home() {
   // Tambahkan = {} di akhir agar jika data kosong, aplikasi tidak crash
   const { loading, data: { getPosts: posts } = {} } = useQuery(FETCH_POSTS_QUERY);
 
+  
+  // const { loading, data: { getPosts: posts }  } = useQuery(FETCH_POSTS_QUERY);
+
   console.log('posts di home:', posts);
   
   // const { loading, data: { getPosts: posts } } = useQuery(FETCH_POSTS_QUERY);
