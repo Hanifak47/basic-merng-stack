@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
 import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag';
+// import gql from 'graphql-tag';
 
 import { Grid } from "semantic-ui-react";
 
@@ -9,6 +9,8 @@ import { AuthContext } from '../context/auth'
 import PostCard from '../components/PostCard';
 
 import PostForm from '../components/PostForm';
+
+import { FETCH_POSTS_QUERY } from '../util/graphql';
 
 function Home() {
 
@@ -23,6 +25,10 @@ function Home() {
 
   // Tambahkan = {} di akhir agar jika data kosong, aplikasi tidak crash
   const { loading, data: { getPosts: posts } = {} } = useQuery(FETCH_POSTS_QUERY);
+
+  console.log('posts di home:', posts);
+  
+  // const { loading, data: { getPosts: posts } } = useQuery(FETCH_POSTS_QUERY);
 
   // if (data) {
   //     console.log(data);
@@ -57,27 +63,5 @@ function Home() {
     </Grid >
   );
 }
-
-const FETCH_POSTS_QUERY = gql`
-  {
-    getPosts {
-      id
-      body
-      createdAt
-      username
-      likeCount
-      likes {
-        username
-      }
-      commentCount
-      comments {
-        id
-        username
-        createdAt
-        body
-      }
-    }
-  }
-`;
 
 export default Home;

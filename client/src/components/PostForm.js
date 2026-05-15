@@ -5,41 +5,57 @@ import { useMutation } from '@apollo/react-hooks';
 import { useForm } from '../util/hooks';
 // import { create } from 'mongoose/lib/model';
 
+// (1) import fetchnya
+import { FETCH_POSTS_QUERY } from '../util/graphql';
 
+
+// komponen utama ui yang mana ada syntac graphql untuk membuat post lihat create post mutation menjalankan fungsi (b)
+// fungsi (a)
 function PostForm() {
-    const { values, onChange, onSubmit } = useForm(createPostCallback, {
-        body: ''
+  // useform custom hook dari apollo server sebagaimana usemutation
+  const { values, onChange, onSubmit } = useForm(createPostCallback, {
+    body: ''
 
-    });
-
-    const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
-        variables: values,
-        update(_, result) {
-            values.body = ''
-        }
-    });
+  });
 
 
-    function createPostCallback() {
-        createPost();
+  // fungsi (b) eksekusi perintah graphql untuk membuat post
+  const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
+    variables: values,
+    update(proxy, result) {
+      const data = proxy.readQuery({
+        // fetch berasal dari impmort fetch yang mana berada pada graphql utilitys lihat nomor 1
+        query: FETCH_POSTS_QUERY
+      })
+        // console.log('data dari cache:', data);
+      // getpost dari fetch pada file nomor 1
+      data.getPosts = [result.data.createPost, ...data.getPosts]
+      proxy.writeQuery({ query: FETCH_POSTS_QUERY, data })
+      values.body = '';
     }
+  });
 
-    return (
-        <Form onSubmit={onSubmit}>
-            <h2>Create a post:</h2>
-            <Form.Field>
-                <Form.Input
-                    placeholder="Hi World!"
-                    name="body"
-                    onChange={onChange}
-                    value={values.body}
-                />
-                <Button type="submit" color="teal">
-                    Submit
-                </Button>
-            </Form.Field>
-        </Form>
-    );
+  // fungsi (c) jembatan antara frontend dan fungsi useform
+  function createPostCallback() {
+    createPost();
+  }
+
+  return (
+    <Form onSubmit={onSubmit}>
+      <h2>Create a post:</h2>
+      <Form.Field>
+        <Form.Input
+          placeholder="Hi World!"
+          name="body"
+          onChange={onChange}
+          value={values.body}
+        />
+        <Button type="submit" color="teal">
+          Submit
+        </Button>
+      </Form.Field>
+    </Form>
+  );
 }
 
 
@@ -67,4 +83,5 @@ const CREATE_POST_MUTATION = gql`
   }
 `;
 
+// komponen ui
 export default PostForm;
