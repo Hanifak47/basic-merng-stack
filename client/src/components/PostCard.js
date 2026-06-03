@@ -7,6 +7,8 @@ import moment from 'moment';
 import { AuthContext } from "../context/auth";
 import LikeButton from './LikeButton';
 
+import DeleteButton from './DeleteButton';
+
 
 // import { useContext } from "react";
 
@@ -37,7 +39,7 @@ function PostCard({
                     src="https://react.semantic-ui.com/images/avatar/large/molly.png"
                 />
                 <Card.Header>{username}</Card.Header>
-                <Card.Meta as={Link} to={'/posts/${id}'} >{moment(createdAt).fromNow(true)}</Card.Meta>
+                <Card.Meta as={Link} to={`/posts/${id}`} >{moment(createdAt).fromNow(true)}</Card.Meta>
                 <Card.Description>{body}</Card.Description>
             </Card.Content>
             <Card.Content extra>
@@ -53,11 +55,7 @@ function PostCard({
                         {commentCount}
                     </Label>
                 </Button>
-                {user && user.username === username && (
-                    <Button as="div" color="red" floated="right" onClick={() => console.log('Delete Post')}>
-                        <Icon name="trash" style={{ margin: 0 }} />
-                    </Button>
-                )}
+                {user && user.username === username && <DeleteButton postId={id} />}
             </Card.Content>
         </Card>
     );

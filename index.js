@@ -74,6 +74,7 @@ const { MONGODB } = require('./config');
 
 const pubsub = new PubSub();
 
+// inisiasi apollo server hanya saat npm start saja
 const server = new ApolloServer({
   typeDefs,
   resolvers,

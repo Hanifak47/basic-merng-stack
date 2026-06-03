@@ -1,12 +1,19 @@
+// di resolver inilah konsep graphql ada mulai dari query mutation dan subscribtion
+
 const { AuthenticationError, UserInputError } = require('apollo-server');
 const Post = require('../../models/Post');
 const checkAuth = require('../../util/check-auth');
 
+// Nama nama method disini contoh getPosts createPosts harus sama persis dengan typedef
+
 module.exports = {
     Query: {
+        // async disini merupakan penanda bahwa dalam scope ini (getPost) diperbolehkan menggunakan await
         async getPosts() {
             try {
+                // await berarti harus tunggu proses benar benar selesai baru baris di bawahnya dieksekusi
                 const posts = await Post.find().sort({ createdAt: -1 });
+                //   dikarenakan return posts ini dalam scope async maka untuk menggunakannya di komponen yg lain perlu di await (await getPosts)
                 return posts;
             } catch (err) {
                 throw new Error(err);

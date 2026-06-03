@@ -1,3 +1,5 @@
+// pada dasarnya mongodb struktur fieldnya bebas, maka disini peran mongoose untuk menentukan ketentuan field di mongodb agar mirip sql
+
 const { model, Schema } = require('mongoose');
 const postSchema = new Schema({
     body: String,
@@ -10,6 +12,7 @@ const postSchema = new Schema({
             createdAt: String
         }
     ],
+    // field dapat diisi dengan array
     likes: [
         {
             username: String,
