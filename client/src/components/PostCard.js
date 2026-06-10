@@ -9,6 +9,8 @@ import LikeButton from './LikeButton';
 
 import DeleteButton from './DeleteButton';
 
+import MyPopup from "../util/MyPopup";
+
 
 // import { useContext } from "react";
 
@@ -44,17 +46,24 @@ function PostCard({
             </Card.Content>
             <Card.Content extra>
                 <LikeButton post={{ id, likes, likeCount }} />
-                <Label basic color="teal" pointing="left">
+                {/* <Label basic color="teal" pointing="left">
                     {likeCount}
-                </Label>
-                <Button labelPosition="right" as={Link} to={`/posts/${id}`}>
-                    <Button color="blue" basic>
-                        <Icon name="comments" />
+                </Label> */}
+
+
+                <MyPopup
+                    content="Comment on post">
+                    <Button labelPosition="right" as={Link} to={`/posts/${id}`}>
+                        <Button color="blue" basic>
+                            <Icon name="comments" />
+                        </Button>
+                        <Label basic color="blue" pointing="left">
+                            {commentCount}
+                        </Label>
                     </Button>
-                    <Label basic color="blue" pointing="left">
-                        {commentCount}
-                    </Label>
-                </Button>
+
+                </MyPopup>
+
                 {user && user.username === username && <DeleteButton postId={id} />}
             </Card.Content>
         </Card>

@@ -9,6 +9,8 @@ import LikeButton from '../components/LikeButton';
 
 import DeleteButton from '../components/DeleteButton';
 
+import MyPopup from '../util/MyPopup';
+
 function SinglePost(props) {
     const postId = props.match.params.postId;
     const { user } = useContext(AuthContext);
@@ -67,18 +69,25 @@ function SinglePost(props) {
                         <Card fluid>
                             <Card.Content extra>
                                 <LikeButton user={user} post={{ id, likeCount, likes }} />
-                                <Button
-                                    as="div"
-                                    labelPosition="right"
-                                    onClick={() => console.log('Comment on post')}
+
+                                <MyPopup
+                                    content="Comment on post"
                                 >
-                                    <Button basic color="blue">
-                                        <Icon name="comments" />
+                                    <Button
+                                        as="div"
+                                        labelPosition="right"
+                                        onClick={() => console.log('Comment on post')}
+                                    >
+                                        <Button basic color="blue">
+                                            <Icon name="comments" />
+                                        </Button>
+                                        <Label basic color="blue" pointing="left">
+                                            {commentCount}
+                                        </Label>
                                     </Button>
-                                    <Label basic color="blue" pointing="left">
-                                        {commentCount}
-                                    </Label>
-                                </Button>
+
+                                </MyPopup>
+
 
                                 {user && user.username === username && (
                                     <DeleteButton postId={id} callback={deletePostCallback} />)}
